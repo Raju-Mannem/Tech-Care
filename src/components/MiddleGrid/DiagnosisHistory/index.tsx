@@ -149,7 +149,7 @@ const Index: React.FC<DiagnosisHistoryProps> = ({ bpData = [] }) => {
               className="text-[14px] mb-[16px] py-[4px] px-[8px] focus:outline-none"
             >
               {ranges.map((range) => (
-                <option key={range.months} value={range.months}>
+                <option key={range.months} value={range.months} className="bg-[#F4F0FE] hover:bg-blue-200">
                   {range.label}
                 </option>
               ))}
