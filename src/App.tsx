@@ -64,7 +64,9 @@ function App() {
       {loading && <div className="h-screen w-full flex justify-center items-center text-2xl font-manrope">
         <img src={LogoIcon} alt="logo icon" className="w-24 h-24 animate-spin"/>
   </div>}
-      {err && <article className="h-screen w-full">something worong: {err}</article>}
+      {err && <div className="h-screen w-full flex flex-col gap-2 justify-center items-center text-2xl text-red-500 font-manrope">
+      something worong Try Again Later
+      </div>}
       {data&&data.length>0&&
       <main className="h-full grid grid-cols-8 gap-4 justify-self-start place-items-start min-h-screen w-full py-4 font-manrope">
       <section className="col-span-2 flex flex-col justify-center items-start gap-4 h-screeen bg-[#ffffff] rounded-2xl">
@@ -74,7 +76,7 @@ function App() {
         <img src={SearchButton} alt="search button"/>
         </button>
         </div>
-        <aside className="max-h-screen w-full overflow-y-scroll scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[#072635] scrollbar-track-[#E3E4E6]">
+        <aside className="max-h-[920px] w-full overflow-y-scroll scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[#072635] scrollbar-track-[#E3E4E6]">
       {data &&
         data.map(
           (
@@ -95,16 +97,11 @@ function App() {
       } 
       </aside>
 </section>
-<section className="col-span-4 flex flex-col justfiy-center items-start gap-4 bg-[#ffffff] rounded-2xl px-4 py-4">
-    <h1 className="manrope font-bold text-[24px] text-[#072635]">Diagnosis History</h1>
-     {data && data[currentProfile] && data[currentProfile].diagnosis_history
-    ?<DiagnosisHistory bpData={data[currentProfile].diagnosis_history}/>
-    : "Loading or no diagnosis history available"}
-     {data && data[currentProfile] && (<DiagnosisList diagnosisListData={data[currentProfile].diagnostic_list}/>)}
-
+<section className="col-span-4 flex flex-col justfiy-center items-start gap-6 rounded-4xl">
+    <DiagnosisHistory bpData={data[currentProfile].diagnosis_history}/>
+     <DiagnosisList diagnosisListData={data[currentProfile].diagnostic_list}/>
 </section>
-<section className="col-span-2 w-full flex flex-col justify-center items-start gap-4 bg-[#ffffff] rounded-2xl px-4 py-6">
-      {data && data[currentProfile] &&
+<section className="col-span-2 w-full flex flex-col justify-center items-start gap-4">
     <PatientProfile 
   name = {data[currentProfile].name}
   gender = {data[currentProfile].gender}
@@ -114,13 +111,7 @@ function App() {
   emergencyContact = {data[currentProfile].emergency_contact}
   insuranceType = {data[currentProfile].insurance_type}
     />
-    }
-    <div className="mt-6 w-full">
-      <h1 className="manrope font-bold text-[24px] text-[#072635]">Lab Results</h1>
-      <div>
-      {data&&data[currentProfile]&&<LabResults results={data[currentProfile].lab_results}/>}
-      </div>
-    </div>
+      <LabResults results={data[currentProfile].lab_results}/>
 </section>
     </main>
     }

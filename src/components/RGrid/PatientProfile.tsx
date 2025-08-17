@@ -3,6 +3,7 @@ import FemaleIcon from "../../assets/FemaleIcon.svg";
 import MaleIcon from "../../assets/MaleIcon.svg";
 import PhoneIcon from "../../assets/PhoneIcon.svg";
 import InsuranceIcon from "../../assets/InsuranceIcon.svg";
+import { toast } from "sonner";
 
 interface PatientProfileInterface {
   name: string;
@@ -22,7 +23,7 @@ const PatientProfile = ({
   emergencyContact,
   insuranceType,
 }: PatientProfileInterface) => {
-  return <div className="w-full text-[14px] flex flex-col gap-2 px-4">
+  return <div className="w-full text-[14px] flex flex-col gap-2 px-4 bg-[#ffffff] rounded-2xl p-4">
     <div className="flex flex-col justify-center items-center gap-4">
         <img src={profilePicture} alt="patient profile" className="h-[200px] w-[200px]"/>
         <strong className="text-[24px]">{name}</strong>
@@ -62,6 +63,11 @@ const PatientProfile = ({
             <strong>{insuranceType}</strong>
         </span>
     </div>
+    <button 
+    className="rounded-full bg-[#01F0D0] m-6 py-2"
+    onClick={()=>(toast.success("user information"))}>
+        Show All Information
+    </button>
   </div>;
 };
 

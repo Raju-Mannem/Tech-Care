@@ -68,21 +68,6 @@ const Index: React.FC<DiagnosisHistoryProps> = ({ bpData = [] }) => {
   //   });
   // }, [bpData, selectedRange]);
   const filteredBpData = bpData.slice(0, selectedRange);
-  let temperature = 0;
-  let respiratoryRate = 0;
-  let heartRate = 0;
-    function cardValues(bpData:DiagnosisHistoryItem[]) {
-    bpData.forEach((rec) => {
-    temperature += rec?.temperature?.value || 0;
-    respiratoryRate += rec?.respiratory_rate?.value || 0;
-    heartRate += rec?.heart_rate?.value || 0;
-   });
-   const avgrespiratoryRate = Math.floor(respiratoryRate/bpData.length);
-   const avgtemperature = (temperature/bpData.length).toFixed(1);;
-   const avgheartRate = Math.floor(heartRate/bpData.length);
-   return { avgtemperature, avgrespiratoryRate, avgheartRate };
-    }
-  const {avgtemperature, avgrespiratoryRate , avgheartRate } = cardValues(filteredBpData);
 
   const { labels, systolicData, diastolicData } = useMemo(() => {
     if (!bpData || bpData.length === 0)
@@ -152,71 +137,93 @@ const Index: React.FC<DiagnosisHistoryProps> = ({ bpData = [] }) => {
     },
   };
   return (
-    <div className="w-full h-full flex flex-col justify-start items-center gap-2">
-    <div className="w-full h-full flex justify-start items-start gap-2 bg-[#F4F0FE] rounded-xl p-2">
-      <div className="basis-6/8">
-        <div className="flex justify-between items-center">
-          <strong className="text-[18px] mb-[8px]">Blood Pressure</strong>
-          <select
-            value={selectedRange}
-            onChange={(e) => setSelectedRange(parseInt(e.target.value))}
-            className="text-[14px] mb-[16px] py-[4px] px-[8px] focus:outline-none"
-          >
-            {ranges.map((range) => (
-              <option key={range.months} value={range.months}>
-                {range.label}
-              </option>
-            ))}
-          </select>
+    <div className="w-full h-full flex flex-col justify-start items-start gap-2 bg-[#ffffff] px-4 py-2 rounded-lg">
+      <h1 className="manrope font-bold text-[24px] text-[#072635] mb-2">Diagnosis History</h1>
+      <div className="w-full h-full flex justify-start items-start gap-2 bg-[#F4F0FE] rounded-xl p-2">
+        <div className="basis-6/8">
+          <div className="flex justify-between items-center">
+            <strong className="text-[18px] mb-[8px]">Blood Pressure</strong>
+            <select
+              value={selectedRange}
+              onChange={(e) => setSelectedRange(parseInt(e.target.value))}
+              className="text-[14px] mb-[16px] py-[4px] px-[8px] focus:outline-none"
+            >
+              {ranges.map((range) => (
+                <option key={range.months} value={range.months}>
+                  {range.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Line data={data} options={options} />
         </div>
-        <Line data={data} options={options} />
+        <div className="basis-2/8 h-full flex flex-col gap-2 text-sm py-2">
+          <div>
+            <span className="inline-block h-[12px] w-[12px] bg-[#ff6384] rounded-full"></span>{" "}
+            <strong className="text-[14px]">Systolic</strong>
+            <p className="text-[22px] font-bold mt-[2px]">
+              {bpData[bpData.length - 1].blood_pressure.systolic.value}
+            </p>
+            <p className="text-[14px] mt-[4px] flex items-center gap-1">
+              {bpData[bpData.length - 1].blood_pressure.systolic.levels ==
+              "Lower than Average" ? (
+                <img
+                  src={ArrowDown}
+                  alt="arrow down"
+                  className="h-[5px] w-[10]"
+                />
+              ) : (
+                <img src={ArrowUp} alt="arrow up" className="h-[5px] w-[10]" />
+              )}
+              {bpData[bpData.length - 1].blood_pressure.systolic.levels}
+            </p>
+          </div>
+          <div className="border-t-1 border-[#CBC8D4] pt-2">
+            <span className="inline-block h-[12px] w-[12px] bg-[#8C6FE6] rounded-full"></span>{" "}
+            <strong className="text-[14px]">Diastolic</strong>
+            <p className="text-[22px] font-bold mt-[2px]">
+              {bpData[bpData.length - 1].blood_pressure.diastolic.value}
+            </p>
+            <p className="text-[14px] mt-[4px] flex items-center gap-1">
+              {bpData[bpData.length - 1].blood_pressure.diastolic.levels ==
+              "Lower than Average" ? (
+                <img
+                  src={ArrowDown}
+                  alt="arrow down"
+                  className="h-[5px] w-[10]"
+                />
+              ) : (
+                <img src={ArrowUp} alt="arrow up" className="h-[5px] w-[10]" />
+              )}
+              {bpData[bpData.length - 1].blood_pressure.diastolic.levels}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="basis-2/8 h-full flex flex-col gap-2 text-sm py-2">
-        <div>
-          <span className="inline-block h-[12px] w-[12px] bg-[#ff6384] rounded-full"></span>{" "}
-          <strong className="text-[14px]">Systolic</strong>
-          <p className="text-[22px] font-bold mt-[2px]">160</p>
-          <p className="text-[14px] mt-[4px] flex items-center gap-1">
-            <img src={ArrowUp} alt="arrow up" className="h-[5px] w-[10]" />{" "}
-            Higher than Average
-          </p>
-        </div>
-        <div className="border-t-1 border-[#CBC8D4] pt-2">
-          <span className="inline-block h-[12px] w-[12px] bg-[#8C6FE6] rounded-full"></span>{" "}
-          <strong className="text-[14px]">Diastolic</strong>
-          <p className="text-[22px] font-bold mt-[2px]">160</p>
-          <p className="text-[14px] mt-[4px] flex items-center gap-1">
-            <img src={ArrowDown} alt="arrow down" className="h-[5px] w-[10]" />
-            Lower than Average
-          </p>
-        </div>
+      <div></div>
+      <div className="w-full flex justify-start items-center gap-3">
+        <Card
+          image={Respiratoryrate}
+          color="bg-[#E0F3FA]"
+          info="Respiratory Rate"
+          value={`${bpData[0].respiratory_rate?.value} bpm`}
+          levels={bpData[0].respiratory_rate?.levels || "No Value"}
+        />
+        <Card
+          image={Temperature}
+          color="bg-[#FFE6E9]"
+          info="Tempature"
+          value={`${bpData[0].temperature?.value}\u00B0F`}
+          levels={bpData[0].temperature?.levels || "No Value"}
+        />
+        <Card
+          image={HeartBPM}
+          color="bg-[#FFE6F1]"
+          info="Heart Rate"
+          value={`${bpData[0].heart_rate.value} bpm`}
+          levels={bpData[0].heart_rate.levels}
+        />
       </div>
-    </div>
-    <div>
-    </div>
-    <div className="w-full flex justify-start items-center gap-3">
-    <Card 
-    image={Respiratoryrate}
-    color="bg-[#E0F3FA]"
-    info="Respiratory Rate"
-    value={`${avgrespiratoryRate} bpm`}
-    levels="Normal"
-    />
-    <Card 
-    image={Temperature}
-    color="bg-[#FFE6E9]"
-    info="Tempature"
-    value={`${avgtemperature}\u00B0F`}
-    levels="Normal"
-    />
-    <Card 
-    image={HeartBPM}
-    color="bg-[#FFE6F1]"
-    info="Heart Rate"
-    value={`${avgheartRate} bpm`}
-    levels="Normal"
-    />
-    </div>
     </div>
   );
 };
